@@ -4,7 +4,7 @@ author: ~"Jesse Islam"
 date: '2019-11-16'
 slug: create-a-hugo-website-with-r-blogdown-netlify-and-github
 categories: ["Webdev", "Tutorial"]
-tags: ["Webdev", "Tutorial"]
+tags: ["Webdev", "Resource"]
 subtitle: 'Academic makes it easy!'
 summary: 'Serves as an information source should someone attempt to create another website in a similar fashion.'
 authors: ["Jesse Islam"]

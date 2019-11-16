@@ -10,7 +10,7 @@ authors:
 superuser: true
 
 # Role/position
-role: PhD. student in Quantitative Life Sciences
+role: PhD student in Quantitative Life Sciences
 
 # Organizations/Affiliations
 organizations:
@@ -41,13 +41,10 @@ education:
 social:
 - icon: envelope
   icon_pack: fas
-  link: '#contact'  # For a direct email link, use "mailto:test@example.org".
+  link: 'mailto:jesse.islam@gmail.com'
 - icon: instagram
   icon_pack: fab
   link: https://www.instagram.com/notjyki/
-- icon: google-scholar
-  icon_pack: ai
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
 - icon: github
   icon_pack: fab
   link: https://github.com/Jesse-Islam
