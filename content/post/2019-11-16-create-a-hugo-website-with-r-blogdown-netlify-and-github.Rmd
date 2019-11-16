@@ -1,0 +1,69 @@
+---
+title: "Create an Academic website with R Blogdown, Netlify and github"
+author: ~"Jesse Islam"
+date: '2019-11-16'
+slug: create-a-hugo-website-with-r-blogdown-netlify-and-github
+categories: ["Webdev", "Tutorial"]
+tags: ["Webdev", "Tutorial"]
+subtitle: 'Academic makes it easy!'
+summary: 'Serves as an information source should someone attempt to create another website in a similar fashion.'
+authors: ["Jesse Islam"]
+lastmod: '2019-11-16T12:03:42-05:00'
+featured: no
+projects: [WebDevelopment]
+---
+## Disclaimer
+
+This is less a tutorial, and more a concatenation of tutorials for individuals who:
+
+1. Want to create a hugo website using the Academic theme.
+2. Would like to make use of R markdown, github and google domains.
+
+Here's how you do it! 
+
+
+
+## Pre-requisites
+
+1. Have a [github](www.github.com) account.
+2. Install [R](https://www.r-project.org/)
+3. Install [RStudio](https://rstudio.com/)
+4. install Rmarkdown and Blogdown packages in R-studio.
+5. Install [Gitkraken](https://www.gitkraken.com/)'s git GUI. This makes the whole version control process in github very easy to manage. Link it to your github account.
+6. (Optional) Have a domain website. This is only necessary if you'd like to link a distict website, and prefer that it not say netlify. For this tutorial, we're using google domains. They're not too expensive ($10 CAD at the time of this post). You can use whatever domain provider you like.
+
+
+## Create academic website template
+
+- Go to [this](https://sourcethemes.com/academic/docs/install/#install-with-web-browser) link and install it with your browser. It will start the process of installing academic with netlify.
+- Make sure you link netlify with your github account. This will create your website as a repository on github and take care of linking netlify and github. 
+- The reason for this work around is that now, we don't have to deal with redirecting different folders to the correct github pages folder. By using netlify as an intermediate step, a lot of the work is skipped.
+
+You now have a basic academic website! on your github!
+
+Netlify will give you some basic website name, but you can change it to something you'd prefer! [See here](https://docs.netlify.com/domains-https/custom-domains/#definitions) For domain issues in Netlify.
+
+## clone repository with Git
+
+- open gitkraken, then your github. Unless you changed it during the process, the repository we're looking for is academic-kickstart or something along those lines.
+- copy the clone/download link, then go to gitkraken. 
+- click the open tab, go to clone then choose where to store your repository. Then paste the link in the URL box.
+-  Hit clone, and you now have a local copy of your repository.
+
+## Edit with Rstudio
+- In the main folder of the repository, you should see a .rproj file. By clicking on this, you will set your Rstudio environment to load your website. 
+
+Use the following command to create a locally updating website:
+```{r, eval=F, echo=T}
+blogdown::serve_site()
+```
+Now, whenever you change any of the files in the repository, your site will update! You can use the IP address that was printed onto your console (http://xxx.x.x.x:xxxx) to view the updating website on your browser.
+
+Use [This link](https://sourcethemes.com/academic/docs/install/) to see Academic's documentation. This will help with any changes you would like to make.
+
+## Version control
+
+In Gitkraken, you can stage, write a commit comment, commit and push any changes you make. This will automatically push the changes to netlify from your remote github repository, and subsequently your website!
+
+## (optional) custom domain
+To have a custom domain, follow this section of netlify's [documentation](https://docs.netlify.com/domains-https/custom-domains/#definitions).

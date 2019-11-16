@@ -1,0 +1,74 @@
+---
+title: "Create an Academic website with R Blogdown, Netlify and github"
+author: ~"Jesse Islam"
+date: '2019-11-16'
+slug: create-a-hugo-website-with-r-blogdown-netlify-and-github
+categories: ["Webdev", "Tutorial"]
+tags: ["Webdev", "Tutorial"]
+subtitle: 'Academic makes it easy!'
+summary: 'Serves as an information source should someone attempt to create another website in a similar fashion.'
+authors: ["Jesse Islam"]
+lastmod: '2019-11-16T12:03:42-05:00'
+featured: no
+projects: [WebDevelopment]
+---
+
+
+
+<div id="disclaimer" class="section level2">
+<h2>Disclaimer</h2>
+<p>This is less a tutorial, and more a concatenation of tutorials for individuals who:</p>
+<ol style="list-style-type: decimal">
+<li>Want to create a hugo website using the Academic theme.</li>
+<li>Would like to make use of R markdown, github and google domains.</li>
+</ol>
+<p>Here’s how you do it!</p>
+</div>
+<div id="pre-requisites" class="section level2">
+<h2>Pre-requisites</h2>
+<ol style="list-style-type: decimal">
+<li>Have a <a href="www.github.com">github</a> account.</li>
+<li>Install <a href="https://www.r-project.org/">R</a></li>
+<li>Install <a href="https://rstudio.com/">RStudio</a></li>
+<li>install Rmarkdown and Blogdown packages in R-studio.</li>
+<li>Install <a href="https://www.gitkraken.com/">Gitkraken</a>’s git GUI. This makes the whole version control process in github very easy to manage. Link it to your github account.</li>
+<li>(Optional) Have a domain website. This is only necessary if you’d like to link a distict website, and prefer that it not say netlify. For this tutorial, we’re using google domains. They’re not too expensive ($10 CAD at the time of this post). You can use whatever domain provider you like.</li>
+</ol>
+</div>
+<div id="create-academic-website-template" class="section level2">
+<h2>Create academic website template</h2>
+<ul>
+<li>Go to <a href="https://sourcethemes.com/academic/docs/install/#install-with-web-browser">this</a> link and install it with your browser. It will start the process of installing academic with netlify.</li>
+<li>Make sure you link netlify with your github account. This will create your website as a repository on github and take care of linking netlify and github.</li>
+<li>The reason for this work around is that now, we don’t have to deal with redirecting different folders to the correct github pages folder. By using netlify as an intermediate step, a lot of the work is skipped.</li>
+</ul>
+<p>You now have a basic academic website! on your github!</p>
+<p>Netlify will give you some basic website name, but you can change it to something you’d prefer! <a href="https://docs.netlify.com/domains-https/custom-domains/#definitions">See here</a> For domain issues in Netlify.</p>
+</div>
+<div id="clone-repository-with-git" class="section level2">
+<h2>clone repository with Git</h2>
+<ul>
+<li>open gitkraken, then your github. Unless you changed it during the process, the repository we’re looking for is academic-kickstart or something along those lines.</li>
+<li>copy the clone/download link, then go to gitkraken.</li>
+<li>click the open tab, go to clone then choose where to store your repository. Then paste the link in the URL box.</li>
+<li>Hit clone, and you now have a local copy of your repository.</li>
+</ul>
+</div>
+<div id="edit-with-rstudio" class="section level2">
+<h2>Edit with Rstudio</h2>
+<ul>
+<li>In the main folder of the repository, you should see a .rproj file. By clicking on this, you will set your Rstudio environment to load your website.</li>
+</ul>
+<p>Use the following command to create a locally updating website:</p>
+<pre class="r"><code>blogdown::serve_site()</code></pre>
+<p>Now, whenever you change any of the files in the repository, your site will update! You can use the IP address that was printed onto your console (<a href="http://xxx.x.x.x:xxxx" class="uri">http://xxx.x.x.x:xxxx</a>) to view the updating website on your browser.</p>
+<p>Use <a href="https://sourcethemes.com/academic/docs/install/">This link</a> to see Academic’s documentation. This will help with any changes you would like to make.</p>
+</div>
+<div id="version-control" class="section level2">
+<h2>Version control</h2>
+<p>In Gitkraken, you can stage, write a commit comment, commit and push any changes you make. This will automatically push the changes to netlify from your remote github repository, and subsequently your website!</p>
+</div>
+<div id="optional-custom-domain" class="section level2">
+<h2>(optional) custom domain</h2>
+<p>To have a custom domain, follow this section of netlify’s <a href="https://docs.netlify.com/domains-https/custom-domains/#definitions">documentation</a>.</p>
+</div>
