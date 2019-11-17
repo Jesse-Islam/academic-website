@@ -15,14 +15,12 @@ role: PhD student in Quantitative Life Sciences
 # Organizations/Affiliations
 organizations:
 - name: McGill University
-  url: "https://www.mcgill.ca/qls/"
 
 # Short bio (displayed in user profile at end of posts)
 Working on statistics, genetics, epidemiology, medicine and dance:
 interests:
 - Statistics
 - Genetics
-- Machine learning
 - Dance
 
 education:
