@@ -61,6 +61,15 @@ Now, whenever you change any of the files in the repository, your site will upda
 
 Use [This link](https://sourcethemes.com/academic/docs/install/) to see Academic's documentation. This will help with any changes you would like to make.
 
+## Quick tips
+
+to make a new blogpost in .Rmd, use the following code:
+
+```{r, eval=F, echo=T}
+blogdown::new_post("post-name",ext = '.Rmd') #Note .md is default.
+```
+
+
 ## Version control
 
 In Gitkraken, you can stage, write a commit comment, commit and push any changes you make. This will automatically push the changes to netlify from your remote github repository, and subsequently your website!
