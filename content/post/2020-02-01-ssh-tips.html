@@ -1,0 +1,35 @@
+---
+title: "SSH Tips to improve workflow"
+author: ~"Jesse Islam"
+date: '2020-02-01'
+slug: ssh-tips
+categories: [Bash Scripts]
+tags: [SSH]
+subtitle: 'For the forgetful like me.'
+summary: 'I amass a few tricks that benefit me, but forget how to do them. This way, I know exactly where to look when I need to. If someone else needs it, they can take it from there.'
+authors: ["Jesse Islam"]
+lastmod: '2020-02-01T14:58:27-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="ssh-keys" class="section level2">
+<h2>SSH keys</h2>
+<p>I find logging in with my password <em>after</em> logging into a password protected computer each time a pain. To get around this, I set up an SSH key to identify my computer uniquely. This requires some basic bash scripting. Can be done with windows with puTTy.</p>
+<p><em>Note</em> I will be using the term <strong>local</strong> to represent the computer you are using, and <strong>remote</strong> to represent the computer you are connecting to.</p>
+<ol style="list-style-type: decimal">
+<li>Open terminal. use <code>ssh-keygen -t rsa</code> and follow the prompts. A passphrase can be used, but it creates the same redundant scenario where I need to log in so I leave this as blank. choose wherever you want to store the file. For the sake of this I’m assuming that its in the same folder you’re working from.</li>
+</ol>
+<p>Now, we have both a public and private key that has been generated (by default this is id_rsa, but it can be whatever you want to call it). We need to pass the public key (<strong>id_rsa.pub</strong>) to wherever we want to SSH to. Keep the private key SAFE and do not share it.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>To do this quickly, you can use <code>ssh-copy-id user@serverlogin.ca</code> however this assumes that there is a hidden folder (any file/folder with a . at the start of the file name is considered hidden) named <code>"~/.ssh/authorized_keys"</code>. if you used the quick method, you will be given a warning asking if you’re sure (say yes) and enter your password. if this fails, you will have to login to your remote and create the <code>.ssh/authorized_keys</code> folders.</p></li>
+<li><p>Back on your local machine, you are ready to ssh without using a password ever again. all you need to do is run the following code:</p></li>
+</ol>
+<p><code>ssh -i id_rsa user@serverlogin.ca</code> where <em>id_rsa</em> is the private key. to go a step further, you can create a bash script with this code alone by running something even simpler like <code>bash login.sh</code> and call it a day.</p>
+</div>
