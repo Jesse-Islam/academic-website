@@ -63,12 +63,23 @@ Use [This link](https://sourcethemes.com/academic/docs/install/) to see Academic
 
 ## Quick tips
 
-to make a new blogpost in .Rmd, use the following code:
+To make a new blogpost in .Rmd, use the following code:
 
 ```{r, eval=F, echo=T}
-blogdown::new_post("post-name",ext = '.Rmd') #Note .md is default.
+blogdown::new_post("post-name", ext = ".Rmd") # Note .md is default.
 ```
 
+To make a new project in .Rmd, use the following code:
+
+```{r, eval=F, echo=T}
+blogdown::new_content(kind = "project", path = "project/project-name.Rmd")
+```
+
+To style code easily (fixing spaces etc):
+
+```{r, eval=F, echo=T}
+styler::style_dir(path = "./content/post/", filetype = c("Rmd"))
+```
 
 ## Version control
 

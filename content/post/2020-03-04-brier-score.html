@@ -1,0 +1,234 @@
+---
+title: "Cox model: right-censored Brier score"
+author: "Jesse Islam"
+date: '2020-03-04'
+slug: brier-score
+categories: ["Survival Analysis"]
+tags: ["Survival Analysis"]
+subtitle: 'Brier score for right-censored data'
+summary: 'Describing the score and how it is calculated.'
+authors: ["Jesse Islam"]
+lastmod: '2020-03-04T15:02:22-05:00'
+featured: no
+math: true
+projects: ["Survival Analysis"]
+bibliography: "2020-03-04-brier-score.bib"
+output:
+  blogdown::html_page:
+    toc: true
+    hugo::toc_float: true
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#theory-graf1999as">Theory <span class="citation">(Graf et al. 1999)</span></a><ul>
+<li><a href="#assumption">Assumption:</a></li>
+<li><a href="#three-categories">Three categories</a></li>
+<li><a href="#inverse-probability-censoring-weights-ipcw">Inverse Probability Censoring Weights (IPCW)</a></li>
+<li><a href="#right-censored-brier-score-rcbs-equation">Right-censored Brier score (rcBs) equation</a></li>
+</ul></li>
+<li><a href="#r-code-right-censored-brier-score">R code: right-censored Brier score</a><ul>
+<li><a href="#load-packages">Load packages</a></li>
+<li><a href="#simulate-data">Simulate data</a></li>
+<li><a href="#cox-model">Cox model</a></li>
+<li><a href="#ipcw">IPCW</a></li>
+<li><a href="#sequential-estimation">Sequential estimation</a></li>
+<li><a href="#apply-ipcw-and-average">Apply IPCW and average</a></li>
+<li><a href="#compare-manual-rcbs-to-riskregressions">Compare manual rcBs to riskRegression’s</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="theory-graf1999as" class="section level1">
+<h1>Theory <span class="citation">(Graf et al. 1999)</span></h1>
+<p>The Brier score does not consider censoring in its score. To fix this issue, a right-censored Brier score (rcBs) was introduced by Dr. Graf et al. <span class="citation">(Graf et al. 1999)</span>. I will be referring to his paper for the Theory section, to reach the rcBs. I will be discussing this score in the framework of a study with individuals being followed for a specific period of time, where they may or may not experience an event of interest.</p>
+<ul>
+<li><span class="math inline">\(i\)</span> <span class="math inline">\(\epsilon\)</span> [1,n], where n=number of individuals, and <span class="math inline">\(i\)</span> represents an individual in the study.</li>
+<li>Let <span class="math inline">\(x_{i}\)</span> represent the covariate profile for individual <span class="math inline">\(i\)</span>.</li>
+<li><span class="math inline">\(T_{i}\)</span> = Survival time for individual <span class="math inline">\(i\)</span>.
+<ul>
+<li><span class="math inline">\(i\)</span> has experienced the event after <span class="math inline">\(T_{i}\)</span>.</li>
+</ul></li>
+<li><span class="math inline">\(C_{i}\)</span> = Censoring time for individual <span class="math inline">\(i\)</span>.
+<ul>
+<li><span class="math inline">\(i\)</span> has not experienced the event yet.</li>
+</ul></li>
+<li><span class="math inline">\(\tilde{T_{i}}\)</span> = <span class="math inline">\(min(T_{i},C_{i})\)</span>. Since survival time and censoring time are mutually exclusive.
+<ul>
+<li>In you can not be both censored and experience the event.</li>
+</ul></li>
+<li><span class="math inline">\(t^{*}\)</span> = a fixed time point.</li>
+</ul>
+<div id="assumption" class="section level2">
+<h2>Assumption:</h2>
+<ul>
+<li>Survival time <span class="math inline">\(T_{i}\)</span> and covariates <span class="math inline">\(x\)</span> of an individual are independent of censoring time <span class="math inline">\(C_{i}\)</span>.
+<ul>
+<li>This assumption agrees with the general censoring assumption, that censoring is random (i.e uninformative).</li>
+</ul></li>
+</ul>
+</div>
+<div id="three-categories" class="section level2">
+<h2>Three categories</h2>
+<ul>
+<li>Category 1: <span class="math inline">\(\tilde{T_{i}} \leq t^{*}\)</span> and <span class="math inline">\(\delta_{i}=1\)</span>
+<ul>
+<li>Individuals who experienced the event before <span class="math inline">\(t^{*}\)</span> are in this category.</li>
+</ul></li>
+<li>Category 2: <span class="math inline">\(\tilde{T_{i}} &gt; t^{*}\)</span> and <span class="math inline">\(\delta_{i}=1\)</span> or <span class="math inline">\(\delta_{i}=0\)</span>
+<ul>
+<li>Individuals who either experience the event or are censored after <span class="math inline">\(t^{*}\)</span>.</li>
+<li>Though <span class="math inline">\(\delta_{i}=1\)</span> is logical, <span class="math inline">\(\delta_{i}=0\)</span> is taking into account censoring. As those individuals are still in the study, they’re weight is relevant. Once they’re weight is redistributed to the right, then they will fall under the final category.</li>
+</ul></li>
+<li>Category 3: <span class="math inline">\(\tilde{T_{i}} \leq t^{*}\)</span> and <span class="math inline">\(\delta_{i}=1\)</span>
+<ul>
+<li>At this point, these individuals have dropped out of the study before time <span class="math inline">\(t^{*}\)</span>. Therefore, we have no way to calculate their contribution.</li>
+<li>To estimate their contribution, we reweight categories 1 and 2 in the following subsection.</li>
+</ul></li>
+</ul>
+</div>
+<div id="inverse-probability-censoring-weights-ipcw" class="section level2">
+<h2>Inverse Probability Censoring Weights (IPCW)</h2>
+<p>The purpose of this re-weighting is to incorporate information loss due to censoring, in the model. This step is not necessary **if and only if* there is no censoring in the data. In survival analysis though we definitely have censoring, and encorporate that information like so:</p>
+<ul>
+<li>Let <span class="math inline">\(\hat{G}(\tilde{T_{i}})\)</span> = Kaplan-Meier estimate of the censoring distribution.
+<ul>
+<li>This can be calculated relatively simply, by treating censoring as the event.</li>
+<li><span class="math inline">\(\hat{G}(\tilde{T_{i}})\)</span> is a vector with an element for each individual.</li>
+</ul></li>
+<li>Let <span class="math inline">\(\hat{G}(t^{*})\)</span> = estimate of the censoring distribution at <span class="math inline">\(t^{*}\)</span>.
+<ul>
+<li><span class="math inline">\(\hat{G}(t^{*})\)</span> is a point estimate.</li>
+</ul></li>
+</ul>
+<p>We will apply the IPCW to our estimates as follows:</p>
+<ul>
+<li>All <em>Category 1</em> individuals <span class="math inline">\(i\)</span> will be re-weighted with their associated <span class="math inline">\(\frac{1}{\hat{G}(\tilde{T_{i}})}\)</span> estimates.</li>
+<li>All <em>Category 2</em> individuals <span class="math inline">\(i\)</span> will be re-weighted with the same <span class="math inline">\(\frac{1}{\hat{G}(t^{*})}\)</span>.</li>
+<li><em>Category 3</em> individuals will be excluded, as the event status at <span class="math inline">\(t^{*}\)</span> is still unknown.
+<ul>
+<li><em>Recall</em>: purpose of this re-weighting is to incorporate Category 3 indirectly, by accounting for missing information.</li>
+</ul></li>
+</ul>
+<p>Using all the information above we are ready to calculate the rcBs.</p>
+</div>
+<div id="right-censored-brier-score-rcbs-equation" class="section level2">
+<h2>Right-censored Brier score (rcBs) equation</h2>
+<p>Using some notation from <a href="https://square.github.io/pysurvival/metrics/brier_score.html">pySurvival</a>’s Brier score documentation:</p>
+<p><span class="math display">\[\frac{1}{n}\sum^{n}_{i=1} \left( \frac{\hat{S}(t,x_{i})*1_{category\_1}}{\hat{G}(\tilde{T_{i}})}\ + \ \frac{(1-\hat{S}(t,x_{i}))*1_{category\_2}}{\hat{G}(t^{*})} \right)\]</span></p>
+<ul>
+<li>Let <span class="math inline">\(\hat{S}(t,x_{i})\)</span> = survival probability over time individual with covariate profile <span class="math inline">\(x_{i}\)</span>.</li>
+<li>Let <span class="math inline">\(1_{category\_1}\)</span> be an indicator variable. For a given <span class="math inline">\(t^{*}\)</span>:
+<ul>
+<li><span class="math inline">\(1_{category\_1}=1\)</span> if individual is part of category 1. 0 otherwise.</li>
+</ul></li>
+<li>Let <span class="math inline">\(1_{category\_2}\)</span> be an indicator variable. For a given <span class="math inline">\(t^{*}\)</span>:
+<ul>
+<li><span class="math inline">\(1_{category\_2}=1\)</span> if individual is part of category 2. 0 otherwise.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="r-code-right-censored-brier-score" class="section level1">
+<h1>R code: right-censored Brier score</h1>
+<p>The following code makes use of the <a href="https://cran.r-project.org/web/packages/riskRegression/vignettes/IPA.html">IPA vignette</a> from <a href="https://CRAN.R-project.org/package=riskRegression">riskRegression</a> to estimate the rcBs. We will compare our manual calculation to that produced by riskRegression.</p>
+<p>The original source code was found on Dr. Patrick Beherny’s <a href="https://myweb.uiowa.edu/pbreheny/index.html">website</a> for his course <a href="https://myweb.uiowa.edu/pbreheny/7210/f18/index.html">BIOS:7210</a>. The <a href="https://myweb.uiowa.edu/pbreheny/7210/f18/notes/11-15.pdf">slides</a> and <a href="https://myweb.uiowa.edu/pbreheny/7210/f18/notes/11-15.R">R code</a> are also available, at the time of this post.</p>
+<p>Our code will calculate the rcBs for each survival time seen in our study. <em>This can be changed to a single time point if required by reworking the main loop.</em></p>
+<div id="load-packages" class="section level3">
+<h3>Load packages</h3>
+<pre class="r"><code>library(survival)
+library(riskRegression)
+library(reprex)
+library(reshape2)
+library(ggplot2)
+library(prodlim)
+library(data.table)</code></pre>
+</div>
+<div id="simulate-data" class="section level3">
+<h3>Simulate data</h3>
+<p>Simulate and sort the data. This sorting step will allow us to apply the re-weighting without issue, so long as we do it before our calculations. We will train a cox model using our training set, then test our model with the test set.</p>
+<pre class="r"><code>set.seed(18)
+astrain &lt;- riskRegression::simActiveSurveillance(278)
+data.table::setorder(astrain, time, -event)
+astest &lt;- riskRegression::simActiveSurveillance(208)
+data.table::setorder(astest, time, -event)</code></pre>
+</div>
+<div id="cox-model" class="section level3">
+<h3>Cox model</h3>
+<p>Next, we fit a cox model on our training set and extract the survival probabilites over time of each individual in our test set.</p>
+<pre class="r"><code># fit a cox model with training set
+coxfit &lt;- coxph(Surv(time, event != 0) ~ ., data = astrain, x = TRUE)
+
+# specify prediction times of interest
+times &lt;- sort(unique(astest$time)) # A vector of t* that we will use.
+
+# predicted survival using cox model on test set
+predSurvs &lt;- summary(survfit(coxfit, newdata = astest), times = times)$surv</code></pre>
+</div>
+<div id="ipcw" class="section level3">
+<h3>IPCW</h3>
+<p>We calculate the IPCW using prodlim, specifically because it correctly estimates the survival probabilites when there are ties (more than one individual experiencing an event of interest) in the data. by using the <code>reverse=TRUE</code> flag, we can get the IPCW directly.</p>
+<pre class="r"><code>fitCens &lt;- prodlim::prodlim(Hist(time, event != 0) ~ 1, astest, reverse = TRUE)
+
+IPCW.subject.times &lt;- prodlim::predictSurvIndividual(fitCens, lag = 1) # G(Ti)
+# The lag=1 flag makes it so that we don&#39;t predict at the end, which has a tendancy to = 0. this lag causes the probabilities right before an event to be used.</code></pre>
+</div>
+<div id="sequential-estimation" class="section level3">
+<h3>Sequential estimation</h3>
+<p>The following code initializes two matrices. One corresponds to <span class="math inline">\(\hat{S}(t,x_{i})\)</span> (Score). The other corresponds to the correct IPCW values for <em>category 1</em> and <em>category 2</em> (matrixIPCW), as they change with <span class="math inline">\(t^{*}\)</span>.</p>
+<pre class="r"><code># Empty matrix that will be filled in with the following loop
+Score &lt;- matrix(NA, nrow(predSurvs), ncol(predSurvs))
+matrixIPCW &lt;- matrix(NA, nrow(predSurvs), ncol(predSurvs))</code></pre>
+<p>NOTE: here, we make use of <em>CensBefore</em> to set individuals in <em>category 3</em> to 0, and y to differentiate between <em>category 1</em> and <em>category 2</em></p>
+<pre class="r"><code># for each point in time we have predicted
+for (i in 1:length(times)) {
+  # get number of censored individuals so long as their survival time is less than times[i]
+  # these individuals do not have an effect on right-censored brier score.
+  CensBefore &lt;- astest$event == 0 &amp; astest$time &lt; times[i]
+  # y encompasses all survival times larger than t[i] with a 1, 0 otherwise
+  y &lt;- drop(t(astest$time &gt; times[i]))
+  # above permits the two parts of right-censored brier score to be calculated, without IPCW, in one line
+  Score[i, ] &lt;- (y - predSurvs[i, ])^2
+
+  # Generate matrixIPCW
+  matrixIPCW[i, y == 0] &lt;- IPCW.subject.times[y == 0] # G(t-|X) filled in corresponding positions
+  fixedTimeIPCW &lt;- predict(fitCens, newdata = astest, times = times[i], level.chaos = 1, mode = &quot;matrix&quot;, type = &quot;surv&quot;, lag = 1)
+  matrixIPCW[i, y == 1] &lt;- fixedTimeIPCW # G(t) filled, same value, for remaining positions.
+  # individuals in category 3 scores are set to 0.
+  Score[i, CensBefore] &lt;- 0
+}</code></pre>
+</div>
+<div id="apply-ipcw-and-average" class="section level3">
+<h3>Apply IPCW and average</h3>
+<p>In this section we apply the IPCW re-weighting to our numerators. We then average our individuals so that we can get a comparable curve to our unadjusted curve.</p>
+<pre class="r"><code># apply IPCW to all scores
+Err &lt;- Score / matrixIPCW
+
+# Average curve demonstrating right-censored brier averaged over test-set, for each time of interest.
+Err &lt;- apply(Err, 1, mean)</code></pre>
+</div>
+<div id="compare-manual-rcbs-to-riskregressions" class="section level3">
+<h3>Compare manual rcBs to riskRegression’s</h3>
+<pre class="r"><code>X2 &lt;- Score(list(&quot;PredictionModel&quot; = coxfit), data = astest, formula = Surv(time, event != 0) ~ 1, summary = &quot;ipa&quot;, se.fit = 0L, metrics = &quot;brier&quot;, contrasts = FALSE, times = times)</code></pre>
+<pre class="r"><code># restructuring to make plotting easier!
+results &lt;- data.frame(riskRegression = X2$Brier$score$Brier[X2$Brier$score$model == &quot;PredictionModel&quot;], CustomBrier = Err, times = times)
+results &lt;- melt(results, id.vars = &quot;times&quot;)
+ggplot(data = results, mapping = aes(x = times, y = value, col = variable)) +
+  geom_line() +
+  geom_rug(sides = &quot;b&quot;) +
+  xlab(&quot;Times&quot;) +
+  ylab(&quot;Brier-Score&quot;)</code></pre>
+<p><img src="/post/2020-03-04-brier-score_files/figure-html/ggplotBriers-1.png" width="672" /></p>
+<p>As you can see, our scores are practically the same. There are slight differences, likely in the exact points in time where the brier score is estimated. Aside from this slight difference, we now have a useable brier score.</p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-graf1999as">
+<p>Graf, Erika, Claudia Schmoor, Willi Sauerbrei, and Martin Schumacher. 1999. “Assessment and Comparison of Prognostic Classification Schemes for Survival Data.” <em>Statistics in Medicine</em> 18 (17-18). Wiley Online Library: 2529–45.</p>
+</div>
+</div>
+</div>

@@ -66,8 +66,12 @@ projects: [WebDevelopment]
 </div>
 <div id="quick-tips" class="section level2">
 <h2>Quick tips</h2>
-<p>to make a new blogpost in .Rmd, use the following code:</p>
-<pre class="r"><code>blogdown::new_post(&quot;post-name&quot;,ext = &#39;.Rmd&#39;) #Note .md is default.</code></pre>
+<p>To make a new blogpost in .Rmd, use the following code:</p>
+<pre class="r"><code>blogdown::new_post(&quot;post-name&quot;, ext = &quot;.Rmd&quot;) # Note .md is default.</code></pre>
+<p>To make a new project in .Rmd, use the following code:</p>
+<pre class="r"><code>blogdown::new_content(kind = &quot;project&quot;, path = &quot;project/project-name.Rmd&quot;)</code></pre>
+<p>To style code easily (fixing spaces etc):</p>
+<pre class="r"><code>styler::style_dir(path = &quot;./content/post/&quot;, filetype = c(&quot;Rmd&quot;))</code></pre>
 </div>
 <div id="version-control" class="section level2">
 <h2>Version control</h2>
