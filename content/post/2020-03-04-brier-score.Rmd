@@ -3,7 +3,7 @@ title: "Cox model: right-censored Brier score"
 author: "Jesse Islam"
 date: '2020-03-04'
 slug: brier-score
-categories: ["Survival Analysis"]
+categories: ["Statistics"]
 tags: ["Survival Analysis"]
 subtitle: 'Brier score for right-censored data'
 summary: 'Describing the score and how it is calculated.'
@@ -11,7 +11,7 @@ authors: ["Jesse Islam"]
 lastmod: '2020-03-04T15:02:22-05:00'
 featured: no
 math: true
-projects: ["Survival Analysis"]
+projects: ["Statistics"]
 bibliography: "2020-03-04-brier-score.bib"
 output:
   blogdown::html_page:

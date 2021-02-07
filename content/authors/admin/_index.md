@@ -40,12 +40,15 @@ social:
 - icon: envelope
   icon_pack: fas
   link: 'mailto:jesse.islam@gmail.com'
-- icon: instagram
-  icon_pack: fab
-  link: https://www.instagram.com/notjyki/
 - icon: github
   icon_pack: fab
   link: https://github.com/Jesse-Islam
+- icon: twitter
+  icon_pack: fab
+  link: https://twitter.com/jesse_islam
+- icon: instagram
+  icon_pack: fab
+  link: https://www.instagram.com/notjyki/
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.  
 # - icon: cv
@@ -62,4 +65,4 @@ user_groups:
 - Visitors
 ---
 
-Jesse Islam is a second year PhD student at Mcgill university in the quantitative life sciences program. He is co-supervised by Dr. Sahir Bhatnagar and Dr. Robert Sladek, conducting research to improve current prognostic methods.
+My name's Jesse. I go by Jyki in the street dance scene. I'll be posting things related to data science, productivity, reading and fitness on this site. I go through phases of interests, so I'll probably post about those too. Things I learn through street dance, cooking and investing.

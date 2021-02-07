@@ -3,7 +3,7 @@ title: "Cox model: right-censored Brier score"
 author: "Jesse Islam"
 date: '2020-03-04'
 slug: brier-score
-categories: ["Survival Analysis"]
+categories: ["Statistics"]
 tags: ["Survival Analysis"]
 subtitle: 'Brier score for right-censored data'
 summary: 'Describing the score and how it is calculated.'
@@ -11,7 +11,7 @@ authors: ["Jesse Islam"]
 lastmod: '2020-03-04T15:02:22-05:00'
 featured: no
 math: true
-projects: ["Survival Analysis"]
+projects: ["Statistics"]
 bibliography: "2020-03-04-brier-score.bib"
 output:
   blogdown::html_page:
@@ -22,7 +22,7 @@ output:
 
 <div id="TOC">
 <ul>
-<li><a href="#theory-graf1999as">Theory <span class="citation">(Graf et al. 1999)</span></a><ul>
+<li><a href="#theory-graf1999as">Theory <span class="citation">(Graf et al. <span>1999</span>)</span></a><ul>
 <li><a href="#assumption">Assumption:</a></li>
 <li><a href="#three-categories">Three categories</a></li>
 <li><a href="#inverse-probability-censoring-weights-ipcw">Inverse Probability Censoring Weights (IPCW)</a></li>
@@ -42,8 +42,8 @@ output:
 </div>
 
 <div id="theory-graf1999as" class="section level1">
-<h1>Theory <span class="citation">(Graf et al. 1999)</span></h1>
-<p>The Brier score does not consider censoring in its score. To fix this issue, a right-censored Brier score (rcBs) was introduced by Dr. Graf et al. <span class="citation">(Graf et al. 1999)</span>. I will be referring to his paper for the Theory section, to reach the rcBs. I will be discussing this score in the framework of a study with individuals being followed for a specific period of time, where they may or may not experience an event of interest.</p>
+<h1>Theory <span class="citation">(Graf et al. <a href="#ref-graf1999as" role="doc-biblioref">1999</a>)</span></h1>
+<p>The Brier score does not consider censoring in its score. To fix this issue, a right-censored Brier score (rcBs) was introduced by Dr. Graf et al. <span class="citation">(Graf et al. <a href="#ref-graf1999as" role="doc-biblioref">1999</a>)</span>. I will be referring to his paper for the Theory section, to reach the rcBs. I will be discussing this score in the framework of a study with individuals being followed for a specific period of time, where they may or may not experience an event of interest.</p>
 <ul>
 <li><span class="math inline">\(i\)</span> <span class="math inline">\(\epsilon\)</span> [1,n], where n=number of individuals, and <span class="math inline">\(i\)</span> represents an individual in the study.</li>
 <li>Let <span class="math inline">\(x_{i}\)</span> represent the covariate profile for individual <span class="math inline">\(i\)</span>.</li>
@@ -228,7 +228,7 @@ ggplot(data = results, mapping = aes(x = times, y = value, col = variable)) +
 <h1>References</h1>
 <div id="refs" class="references">
 <div id="ref-graf1999as">
-<p>Graf, Erika, Claudia Schmoor, Willi Sauerbrei, and Martin Schumacher. 1999. “Assessment and Comparison of Prognostic Classification Schemes for Survival Data.” <em>Statistics in Medicine</em> 18 (17-18). Wiley Online Library: 2529–45.</p>
+<p>Graf, Erika, Claudia Schmoor, Willi Sauerbrei, and Martin Schumacher. 1999. “Assessment and Comparison of Prognostic Classification Schemes for Survival Data.” <em>Statistics in Medicine</em> 18 (17-18): 2529–45.</p>
 </div>
 </div>
 </div>
