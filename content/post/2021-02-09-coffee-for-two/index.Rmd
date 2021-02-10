@@ -3,8 +3,8 @@ title: Coffee for Two
 author: ''
 date: '2021-02-09'
 slug: []
-categories: ["writing"]
-tags: ["writing"]
+categories: ["Short Stories"]
+tags: ["Short Stories"]
 subtitle: ''
 summary: ''
 authors: ["Jesse Islam"]
@@ -14,7 +14,7 @@ image:
   caption: ''
   focal_point: ''
   preview_only: no
-projects: []
+projects: ["Short Stories"]
 ---
 
 The alarm clock rang for a minute by the time Jack finally knocked it off the night stand on his right. The batteries fell out, and he cursed. It happens every other morning, but for some reason his body doesn't listen until a few minutes after waking. He pats around the left side of his bed looking for Jennifer's face. When he finds it, she bites him. He's disturbed the beast in her slumber and paid dearly. To appease the beast he wakes up and heads to the kitchen to make breakfast.
